@@ -1,6 +1,7 @@
 import { listStreamDecks, openStreamDeck } from '@elgato-stream-deck/node'
 import fs from 'fs'
 import path from 'path'
+import { createButton } from './lib/image.util'
 
 // Automatically discovers connected Stream Decks, and attaches to the first one.
 // Throws if there are no connected stream decks.
@@ -29,16 +30,17 @@ myStreamDeck.on('error', (error) => {
 // Fill the first button form the left in the first row with a solid red color. This is asynchronous.
 myStreamDeck.fillKeyColor(4, 255, 0, 0)
 console.log('Successfully wrote a red square to key 4.')
+console.log("ICON_SIZE", myStreamDeck.ICON_SIZE);
+createButton('Hello', myStreamDeck.ICON_SIZE).then(img =>{
 
-const sharp = require('sharp') // See http://sharp.dimens.io/en/stable/ for full docs on this great library!
-sharp(path.resolve(__dirname, '../assets/button.png'))
-	.flatten() // Eliminate alpha channel, if any.
-	.resize(myStreamDeck.ICON_SIZE, myStreamDeck.ICON_SIZE) // Scale up/down to the right size, cropping if necessary.
-	.raw() // Give us uncompressed RGB.
-	.toBuffer()
-	.then((buffer) => {
-		myStreamDeck.fillKeyBuffer(2, buffer)
-	})
-	.catch((err) => {
-		console.error(err)
-	})
+    myStreamDeck.fillKeyBuffer(2, img)
+});
+
+
+    /*
+    Button types:
+     - Open application
+     - CMD
+     - HTTP
+     - Status
+    */
